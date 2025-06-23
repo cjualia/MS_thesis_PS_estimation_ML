@@ -5,13 +5,17 @@ Therefore, it provides a simplified implementation of the methodology to estimat
 For this purpose, it was also built to work with simulated data. 
 
 # Introduction
+
 In observational studies, treated and untreated (or exposed and unexposed) populations often differ in their covariates. As a result, these groups are not directly comparable.
 
 In the language of causal inference, this implies a violation of the ignorability assumption. Consequently, the treatment effect cannot be estimated directly from the observed outcome differences between the groups.
 
-Propensity scores are assigned to each individual of an observational study, and reflect their probability of receiving treatment based on their covariates. Traditionally, propensity scores have been estimated using logistic regression. However, new approaches have emerged based on machine learning (ML), which offer several advantages: they do not rely on strong parametric assumptions, and they can automatically detect non-linear relationships and interactions among covariates that are often omitted in standard regression models.
+The use of **propensity scores (PS)** allows researchers to balance these covariates, making treated and untreated groups comparable, and enabling an unbiased estimation of the causal effect.
 
-This project explores whether ML methods—specifically Random Forest (RF), Gradient Boosting Machines (GBM), and Classification and Regression Trees (CART)—can outperform logistic regression in estimating propensity scores and achieving better covariate balance, particularly in complex scenarios. The study uses simulated data under controlled conditions to compare the performance of these methods using established metrics such as ASMD and ASAM.
+Propensity scores are assigned to each individual in a study and reflect their probability of receiving treatment based on their observed covariates. Traditionally, PS have been estimated using **logistic regression**, due to its simplicity and interpretability. However, new approaches based on **machine learning (ML)** have emerged, offering several advantages: they do not rely on strong parametric assumptions and can automatically capture non-linear relationships and interactions among covariates that are often omitted in standard regression models.
+
+
+This project explores whether ML methods—specifically Random Forest (RF), Gradient Boosting Machines (GBM), and Classification and Regression Trees (CART)—can outperform logistic regression in estimating propensity scores and achieving better covariate balance. The study uses simulated data under controlled conditions to compare the performance of these methods using established metrics such as ASMD and ASAM.
 
 # Instructions
 
