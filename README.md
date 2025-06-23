@@ -15,7 +15,7 @@ The use of **propensity scores (PS)** allows researchers to balance these covari
 Propensity scores are assigned to each individual in a study and reflect their probability of receiving treatment based on their observed covariates. Traditionally, PS have been estimated using **logistic regression**, due to its simplicity and interpretability. However, new approaches based on **machine learning (ML)** have emerged, offering several advantages: they do not rely on strong parametric assumptions and can automatically capture non-linear relationships and interactions among covariates that are often omitted in standard regression models.
 
 
-This project explores whether ML methods—specifically Random Forest (RF), Gradient Boosting Machines (GBM), and Classification and Regression Trees (CART)—can outperform logistic regression in estimating propensity scores and achieving better covariate balance. The study uses simulated data under controlled conditions to compare the performance of these methods using established metrics such as ASMD and ASAM.
+This project explores whether ML methods; specifically, Random Forest (RF), Gradient Boosting Machines (GBM), and Classification and Regression Trees (CART); can outperform logistic regression in estimating propensity scores and achieving better covariate balance. The study uses simulated data under controlled conditions to compare the performance of these methods using established metrics such as ASMD and ASAM.
 
 # Instructions
 
