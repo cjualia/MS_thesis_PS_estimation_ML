@@ -17,7 +17,7 @@ eps_distribution <- function(scenario) {
           simple_estimations[[scenario]]$gbm$eps,
           simple_estimations[[scenario]]$cart$eps)
   
-  method = rep(c("LR", "RF", "GBM", "CART"),
+  method = rep(c("RL", "RF", "GBM", "CART"),
                each = length(simple_estimations[[scenario]]$rf$eps))
   
   df1 <- data.frame(Tr = Tr, eps = eps, method = method, Tr = rep(Tr, times = 4))
@@ -47,7 +47,7 @@ eps_distribution <- function(scenario) {
       simple_estimations[[scenario]]$rf$eps,
       simple_estimations[[scenario]]$gbm$eps,
       simple_estimations[[scenario]]$cart$eps),
-    model = rep(c("LR", "RF", "GBM", "CART"), each = length(tps)),
+    model = rep(c("RL", "RF", "GBM", "CART"), each = length(tps)),
     Tr = Tr
   )
   
@@ -72,9 +72,9 @@ eps_distribution <- function(scenario) {
 }
 
 # Sólo para el caso base (A)
-eps_distribution("A")$distribution
-eps_distribution("B")$distribution
-eps_distribution("C")$distribution
+eps_distribution("A")$estimation
+eps_distribution("B")$estimation
+eps_distribution("C")$estimation
 
 #-------------------------------------------------------------------------------
 # Barplots ASAM
@@ -84,27 +84,22 @@ barplots <- function(scenario){
   if (scenario == "A"){
     results_m <- results_A_m 
     results_ipw <- results_A_w
-    
   } else if (scenario == "B"){
     results_m <- results_B_m 
     results_ipw <- results_B_w
-    
   } else if (scenario == "C"){
     results_m <- results_C_m 
     results_ipw <- results_C_w
-    
   } else if (scenario == "D"){
     results_m <- results_D_m 
     results_ipw <- results_D_w
-    
   } else if (scenario == "E"){
     results_m <- results_E_m 
     results_ipw <- results_E_w
-    
   } 
   
   df <- data.frame(
-    metodo = rep(c("LR", "RF", "GBM", "CART"), times = 2),
+    metodo = rep(c("RL", "RF", "GBM", "CART"), times = 2),
     tipo = rep(c("IPW", "Matching"), each = 4),
     asam = c(results_ipw$logr$asam_mean, results_ipw$rf$asam_mean, 
              results_ipw$gbm$asam_mean, results_ipw$cart$asam_mean,
@@ -114,31 +109,32 @@ barplots <- function(scenario){
            results_ipw$gbm$asam_sd, results_ipw$cart$asam_sd,
            results_m$logr$asam_sd, results_m$rf$asam_sd, 
            results_m$gbm$asam_sd, results_m$cart$asam_sd)/sqrt(100))
+  
+  plot <- ggplot(df, aes(x = metodo, y = asam, fill = tipo)) +
     
-   plot <- ggplot(df, aes(x = metodo, y = asam, fill = tipo)) +
-     
-     geom_bar(stat = "identity", position = position_dodge(width = 0.7), width = 0.6) +
-     
-      geom_errorbar(aes(ymin = asam - se, ymax = asam + se),
-        position = position_dodge(width = 0.7),
-        width = 0.2) +
-      
-      labs(x = NULL, y = "ASAM", fill = NULL,
-           title = paste("Escenario ", scenario)) +
-     
-      scale_fill_manual(values = c("IPW" = "#98F5FF", "Matching" = "#5F9EA0")) +
-     
-     theme_minimal() +
-     theme(legend.position = "bottom",
-           axis.title = element_text(size = 9),
-           legend.text = element_text(size = 8),
-           legend.title = element_blank(),
-           plot.title = element_text(
-             size = 10,
-             hjust = 0.5))
-   
-   return(plot)
+    geom_bar(stat = "identity", position = position_dodge(width = 0.7), width = 0.6) +
+    
+    geom_errorbar(aes(ymin = asam - se, ymax = asam + se),
+                  position = position_dodge(width = 0.7),
+                  width = 0.2) +
+    
+    labs(x = NULL, y = "ASAM", fill = NULL,
+         title = paste("Escenario", scenario)) +
+    
+    scale_fill_manual(values = c("IPW" = "#98F5FF", "Matching" = "#5F9EA0")) +
+    
+    coord_cartesian(ylim = c(0, 0.25)) +  # <<--- Aquí se fija el eje Y
+    
+    theme_minimal() +
+    theme(legend.position = "bottom",
+          axis.title = element_text(size = 9),
+          legend.text = element_text(size = 8),
+          legend.title = element_blank(),
+          plot.title = element_text(size = 10, hjust = 0.5))
+  
+  return(plot)
 }
+
 
 barplots_results <- list("A" <- barplots("A"),
                          "B" <- barplots("B"),
@@ -196,22 +192,23 @@ loveplot <- function(scenario, method){
   df <- data.frame(as.factor(model),as.factor(cov),asmd_means, asmd_se)
   
   plot <- ggplot(df, aes(x = asmd_means, y = reorder(cov, asmd_means), color = model)) +
-    geom_point(position = position_dodge(width = 0.3), size = 1.5) +
+    geom_point(position = position_dodge(width = 0.3), size = 2) +
     geom_errorbarh(
       aes(xmin = asmd_means - asmd_se, xmax = asmd_means + asmd_se),
       height = 0.2,
       position = position_dodge(width = 0.5)) +
     
-    scale_color_manual(values = c("RL" = "black", "RF" = "#FF00FF", 
-                                  "GBM" = "#00FF00","CART" = "#FF7F00")) + 
+    scale_color_manual(values = c("RL" = "#0000FF", "RF" = "#FF3E96", 
+                                  "GBM" = "#00FF00","CART" = "#00F5FF")) + 
     
     geom_vline(xintercept = 0.1, linetype = "dashed", color = "black") +
-    labs(x = "ASMD (Media ± ES)", y = "Confusora", color = "Método") +
+    coord_cartesian(xlim = c(0, 0.4)) +
+    labs(x = "ASMD", y = "Confusores", color = "Método") +
     #facet_wrap(~ escenario) +
     theme_minimal() +
     theme(legend.position = "bottom",
-          axis.title = element_text(size = 7),
-          legend.text = element_text(size = 7),
+          axis.title = element_text(size = 10),
+          legend.text = element_text(size = 10),
           legend.title = element_blank())
   
   return(plot)
@@ -230,7 +227,8 @@ loveplot_results <- list("A_m" = loveplot_A_m <- loveplot("A", "matching"),
                          "E_w" =loveplot_E_w <- loveplot("E", "ipw"))
 
 #-------------------------------------------------------------------------------
-Fig_balance <- barplots_results[[1]] + barplots_results[[2]] + barplots_results[[3]] +
-  loveplot_results[1:5][[1]] + loveplot_results[1:5][[2]] + loveplot_results[1:5][[3]] +
-  loveplot_results[6:10][[1]] + loveplot_results[6:10][[2]] + loveplot_results[6:10][[3]] +
-  plot_layout(ncol = 3)
+Fig_barplots <- loveplot_results[1:5][[1]] + loveplot_results[6:10][[1]] + loveplot_results[1:5][[2]] + 
+  loveplot_results[6:10][[2]] + loveplot_results[1:5][[3]] + loveplot_results[6:10][[3]] +
+  plot_layout(ncol = 2)
+
+Fig_balance <- barplots_results[[1]] + barplots_results[[2]] + barplots_results[[3]] + plot_layout(ncol = 3)
