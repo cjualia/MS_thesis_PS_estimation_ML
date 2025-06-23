@@ -31,16 +31,16 @@ renv::restore()
 
 
 # Methodology
-The methodology is strongly inspired from the study of Cannas & Arpino [3], prioritizing covariate balance over prediction accuracy during hyperparameter tuning.
+
 Three scenarios of increasing complexity (A, B, C), based on prior work by Pirracchio et al. (2018), were generated using Monte Carlo simulations (100 datasets per scenario). Each dataset includes one binary treatment variable, one continuous outcome, and ten covariates (including nonlinear transformations and interactions).
 
 Propensity scores were estimated using logistic regression (baseline) and three ML models: Random Forest (RF), Gradient Boosting Machines (GBM), and Classification and Regression Trees (CART). To assess covariate balance, two standard PS application methods were used: nearest-neighbor matching and inverse probability weighting (IPW). The balance was measured using Absolute Standardized Mean Differences (ASMD) and their average (ASAM).
 
 ![General Workflow](images/general_workflow.png)
 
+The methodology is strongly inspired from the study of Cannas & Arpino [3], prioritizing covariate balance over prediction accuracy during hyperparameter tuning.
 
-
-# Results
+For further details consult the original thesis `TFM_Cristina_Juarez_Alia.pdf` (in Spanish).
 
 # Bibliography
 
