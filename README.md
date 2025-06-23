@@ -22,11 +22,10 @@ This project provides a `renv` environment. Make sure to have `renv` installed a
 renv::restore()
 ```
 
-## Steps
+## Scripts / Pipeline
 
-The script `analysis.R` runs the entire analysis. However, if the user wish to change some features of the methodology:
-
-
+*  `analysis.R` runs the entire analysis.
+* 
 
 
 # Methodology
