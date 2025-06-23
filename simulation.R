@@ -3,13 +3,13 @@
 source("packages.R")
 source("functions.R")
 
-# `all_scenarios` es un dataframe que guarda todos los dataframes utilizados
-# para el análisis. Cada columna representa un escenario distinto (A-E).
+# `all_scenarios` is a dataframe that stores all the dataframes used
+# for the analysis. Each column represents a different scenario (A–E).
 
 all_scenarios <- as.data.frame(sapply(c("A","B","C","D", "E"), 
                                       function(x){rep_simulation(100,1000,x)}))
 
-# Datos guardados en la carpeta `data`.
+# Data saved in the `data` folder.
 save(all_scenarios, file = "data/all_scenarios.rda")
 
 
