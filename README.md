@@ -24,12 +24,19 @@ renv::restore()
 
 ## Scripts / Pipeline
 
-*  `analysis.R` runs the entire analysis.
-* 
+* `functions.R` contains all designed functions for the analysis. User can modify simulated scenarios (i.e.: covariates, modeling of outcome/treatment, etc.) and other features of the analysis (incorporating another ML method, testing other hyperparameters, etc.).
+* `simulation.R` small script to produce Monte Carlo simulations of all scenarios. Generates `all_scenarios.rda`, a list in which elements refers to an scenario, and contains datasets from which all analysis are made.
+* `analysis.R` runs the entire analysis. All the results are stored in `results` folder.
+* `plots.R` script to perform all the plots.
 
 
 # Methodology
-The methodology is strongly inspired from the study of Cannas & Arpino [3].
+The methodology is strongly inspired from the study of Cannas & Arpino [3], prioritizing covariate balance over prediction accuracy during hyperparameter tuning.
+Three scenarios of increasing complexity (A, B, C), based on prior work by Pirracchio et al. (2018), were generated using Monte Carlo simulations (100 datasets per scenario). Each dataset includes one binary treatment variable, one continuous outcome, and ten covariates (including nonlinear transformations and interactions).
+
+Propensity scores were estimated using logistic regression (baseline) and three ML models: Random Forest (RF), Gradient Boosting Machines (GBM), and Classification and Regression Trees (CART). To assess covariate balance, two standard PS application methods were used: nearest-neighbor matching and inverse probability weighting (IPW). The balance was measured using Absolute Standardized Mean Differences (ASMD) and their average (ASAM).
+
+
 
 # Results
 
