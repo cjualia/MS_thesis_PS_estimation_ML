@@ -1,14 +1,18 @@
-This project is based on my Master's thesis entitled: "Comparison of Traditional Models and Machine Learning for the Estimation of Propensity Scores."
+# Context
 
-The repository contains a prototype of a fully automated framework designed to select the best method for estimating propensity scores. It provides a simplified implementation of the methodology for estimating PS using different models (logistic regression and several machine learning algorithms), and for evaluating covariate balance based on the estimated scores. The implementation is tailored to simulated datasets, where treatment assignment and outcome are modeled from specified covariates, but can be adapted to work with real-world data.
+This project corresponds to my Master's thesis entitled: _"Comparison of Traditional Models and Machine Learning for the Estimation of Propensity Scores."_
+
+The repository contains a prototype for a fully automated framework designed to **help select the best method for estimating propensity scores**. It provides a simplified implementation of the methodology for estimating PS using different models (logistic regression and several machine learning algorithms: Random Forest, Gradient Boosting and Decision trees), and evaluating covariate balance after applying the estimated PS. **The implementation is tailored to simulated datasets, where treatment assignment and outcome are modeled from specified covariates, but can be adapted to work with real-world data**.
 
 # Introduction
 
 In observational studies, treated and untreated (or exposed and unexposed) populations often differ in their covariates. As a result, these groups are not directly comparable. In the language of causal inference, this implies a violation of the ignorability assumption. Consequently, the treatment effect cannot be estimated directly from the observed outcome differences between the groups.
 
-The use of **propensity scores (PS)** allows researchers to balance these covariates, making treated and untreated groups comparable, and enabling an unbiased estimation of the causal effect. PS are assigned to each individual in a study and reflect their probability of receiving treatment based on their observed covariates. Traditionally, PS have been estimated using **logistic regression**, due to its simplicity and interpretability. However, new approaches based on **machine learning (ML)** have emerged, offering several advantages: they do not rely on strong parametric assumptions and can automatically capture non-linear relationships and interactions among covariates that are often omitted in standard regression models.
+The use of **propensity scores (PS)** allows researchers to balance these covariates, making treated and untreated groups comparable, and enabling an unbiased estimation of the causal effect. PS are assigned to each individual in a study and reflect their probability of receiving treatment based on their observed covariates. A propensity score is assigned to each individual in a study and reflects the probability of receiving the treatment, given their observed covariates. Once estimated, PS can be applied using various methods. In this study, I used **matching** and **inverse probability weighting (IPW)** to correct for imbalance between groups.
 
-This project explores whether ML methods; specifically, Random Forest (RF), Gradient Boosting Machines (GBM), and Classification and Regression Trees (CART); can outperform logistic regression in estimating propensity scores and achieving better covariate balance. The study uses simulated data under controlled conditions to compare the performance of these methods using established metrics such as ASMD and ASAM.
+Traditionally, PS have been estimated using **logistic regression (LR)** due to its simplicity and interpretability. However, LR often fails to capture non-linear relationships and interactions among covariates, as these must be explicitly specified in the model. In contrast, **machine learning (ML)** methods offer key advantages: they do not rely on strong parametric assumptions and can automatically model complex, non-linear patterns and interactions in the data, potentially leading to more accurate PS estimation.
+
+This project explores whether ML methods; specifically, **Random Forest (RF), Gradient Boosting Machines (GBM), and Classification and Regression Trees (CART)**; can outperform LR in estimating PS and achieving better covariate balance. The study uses simulated data under controlled conditions to compare the performance of these methods using established metrics such as ASMD and ASAM.
 
 # Instructions
 
@@ -49,19 +53,20 @@ Covariate balance was assessed using:
 
 Balance was quantified using:
 
-Absolute Standardized Mean Differences (ASMD) for each covariate
+* Absolute Standardized Mean Differences (ASMD) for each covariate
+* The Average ASMD (ASAM) was computed across all identified confounders as a global measure of balance.
 
-Average ASMD (ASAM) across all confounders
+ **NOTE**: _Only confounders were included in the ASAM calculation, as the primary objective was to evaluate whether these confounding variables were adequately adjusted for._ 
 
 ![General Workflow](images/general_workflow.png)
 
-This project adopts the strategy proposed by Cannas & Arpino [19], which prioritizes covariate balance over predictive performance when tuning hyperparameters. Specifically, optimal hyperparameters are selected based on the evaluation of global covariate balance, measured using ASAM, rather than traditional predictive metrics such as accuracy.
+This project adopts the strategy proposed by Cannas & Arpino [3], which prioritizes covariate balance over predictive performance when tuning hyperparameters. Specifically, optimal hyperparameters are selected based on the evaluation of global covariate balance, measured using ASAM, rather than traditional predictive metrics such as accuracy.
 
 In brief, multiple models are trained with different hyperparameter configurations. For each model, PS are estimated and applied using both IPW and nearest-neighbor matching. The resulting covariate balance is then assessed via ASAM. The optimal hyperparameter is the one that yields the lowest ASAM, indicating better balance between treated and untreated groups.
 
 ![Hyperparameter optimization](images/ajuste_hp.png)
 
-Note: Only one hyperparameter per machine learning method was tuned to reduce computational cost:
+**NOTE**: _Only one hyperparameter per machine learning method was tuned to reduce computational cost_:
 
 * `mtry` for Random Forest
 
@@ -71,7 +76,12 @@ Note: Only one hyperparameter per machine learning method was tuned to reduce co
 
 This is an acknowledged limitation of the study, as a more exhaustive search (e.g. tuning multiple parameters simultaneously) might lead to better results. However, this trade-off was necessary to keep the workflow manageable and reproducible, as it was built for academic purposes.
 
-📚 For full details, see the original thesis in this repository: TFM_Cristina_Juarez_Alia.pdf (in Spanish)
+
+
+📚 **For full details, see the original thesis in this repository: TFM_Cristina_Juarez_Alia.pdf (in Spanish)**
+
+
+
 
 # Bibliography
 
