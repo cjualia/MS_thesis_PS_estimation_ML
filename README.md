@@ -1,19 +1,12 @@
-This project aims to develop my MS thesis entitled: "Comparison of tradictional models and machine learning for the estimation of propensity scores".
+This project is based on my Master's thesis entitled: "Comparison of Traditional Models and Machine Learning for the Estimation of Propensity Scores."
 
-The basecode represents a prototype of a fully automated framework to select the best propensity score estimation method. 
-Therefore, it provides a simplified implementation of the methodology to estimate propensity scores by different models (logistic regression and several machine learning methods) and evaluate balance of covariates using those estimated propensity scores.
-For this purpose, it was also built to work with simulated data. 
+The repository contains a prototype of a fully automated framework designed to select the best method for estimating propensity scores. It provides a simplified implementation of the methodology for estimating PS using different models (logistic regression and several machine learning algorithms), and for evaluating covariate balance based on the estimated scores. The implementation is tailored to simulated datasets—where treatment assignment and outcome are modeled from specified covariates, but can be adapted to work with real-world data.
 
 # Introduction
 
-In observational studies, treated and untreated (or exposed and unexposed) populations often differ in their covariates. As a result, these groups are not directly comparable.
+In observational studies, treated and untreated (or exposed and unexposed) populations often differ in their covariates. As a result, these groups are not directly comparable. In the language of causal inference, this implies a violation of the ignorability assumption. Consequently, the treatment effect cannot be estimated directly from the observed outcome differences between the groups.
 
-In the language of causal inference, this implies a violation of the ignorability assumption. Consequently, the treatment effect cannot be estimated directly from the observed outcome differences between the groups.
-
-The use of **propensity scores (PS)** allows researchers to balance these covariates, making treated and untreated groups comparable, and enabling an unbiased estimation of the causal effect.
-
-Propensity scores are assigned to each individual in a study and reflect their probability of receiving treatment based on their observed covariates. Traditionally, PS have been estimated using **logistic regression**, due to its simplicity and interpretability. However, new approaches based on **machine learning (ML)** have emerged, offering several advantages: they do not rely on strong parametric assumptions and can automatically capture non-linear relationships and interactions among covariates that are often omitted in standard regression models.
-
+The use of **propensity scores (PS)** allows researchers to balance these covariates, making treated and untreated groups comparable, and enabling an unbiased estimation of the causal effect. PS are assigned to each individual in a study and reflect their probability of receiving treatment based on their observed covariates. Traditionally, PS have been estimated using **logistic regression**, due to its simplicity and interpretability. However, new approaches based on **machine learning (ML)** have emerged, offering several advantages: they do not rely on strong parametric assumptions and can automatically capture non-linear relationships and interactions among covariates that are often omitted in standard regression models.
 
 This project explores whether ML methods; specifically, Random Forest (RF), Gradient Boosting Machines (GBM), and Classification and Regression Trees (CART); can outperform logistic regression in estimating propensity scores and achieving better covariate balance. The study uses simulated data under controlled conditions to compare the performance of these methods using established metrics such as ASMD and ASAM.
 
@@ -33,7 +26,6 @@ renv::restore()
 * `simulation.R` small script to produce Monte Carlo simulations of all scenarios. Generates `all_scenarios.rda`, a list in which elements refers to an scenario, and contains datasets from which all analysis are made.
 * `analysis.R` runs the entire analysis. All the results are stored in `results` folder.
 * `plots.R` script to perform all the plots.
-
 
 # Methodology
 
@@ -63,11 +55,23 @@ Average ASMD (ASAM) across all confounders
 
 ![General Workflow](images/general_workflow.png)
 
-⚙️ Hyperparameter Tuning
+This project adopts the strategy proposed by Cannas & Arpino [19], which prioritizes covariate balance over predictive performance when tuning hyperparameters. Specifically, optimal hyperparameters are selected based on the evaluation of global covariate balance, measured using ASAM, rather than traditional predictive metrics such as accuracy.
 
-The methodology is strongly inspired from the study of Cannas & Arpino [3], prioritizing covariate balance over prediction accuracy during hyperparameter tuning.
+In brief, multiple models are trained with different hyperparameter configurations. For each model, PS are estimated and applied using both IPW and nearest-neighbor matching. The resulting covariate balance is then assessed via ASAM. The optimal hyperparameter is the one that yields the lowest ASAM, indicating better balance between treated and untreated groups.
 
-For further details consult the original thesis `TFM_Cristina_Juarez_Alia.pdf` (in Spanish).
+![Hyperparameter optimization](images/ajuste_hp.png)
+
+Note: Only one hyperparameter per machine learning method was tuned to reduce computational cost:
+
+* `mtry` for Random Forest
+
+* `shrinkage` for GBM
+
+* `cp` for CART
+
+This is an acknowledged limitation of the study, as a more exhaustive search (e.g. tuning multiple parameters simultaneously) might lead to better results. However, this trade-off was necessary to keep the workflow manageable and reproducible, as it was built for academic purposes.
+
+📚 For full details, see the original thesis in this repository: TFM_Cristina_Juarez_Alia.pdf (in Spanish)
 
 # Bibliography
 
@@ -76,4 +80,3 @@ For further details consult the original thesis `TFM_Cristina_Juarez_Alia.pdf` (
 2. **Lee, B. K.**, Lessler, J., & Stuart, E. A. (2010). *Improving propensity score weighting using machine learning*. _Statistics in Medicine_, **29**(3), 337–346. [https://doi.org/10.1002/sim.3782](https://doi.org/10.1002/sim.3782)
 
 3. **Cannas, M.**, & Arpino, B. (2019). *Tuning parameters in propensity score estimation: A simulation study assessing performance of balance, overlap, and treatment effect*. _Computational Statistics & Data Analysis_, **131**, 1–13. [https://doi.org/10.1016/j.csda.2018.10.005](https://doi.org/10.1016/j.csda.2018.10.005)
--
