@@ -1,6 +1,6 @@
 This project is based on my Master's thesis entitled: "Comparison of Traditional Models and Machine Learning for the Estimation of Propensity Scores."
 
-The repository contains a prototype of a fully automated framework designed to select the best method for estimating propensity scores. It provides a simplified implementation of the methodology for estimating PS using different models (logistic regression and several machine learning algorithms), and for evaluating covariate balance based on the estimated scores. The implementation is tailored to simulated datasets—where treatment assignment and outcome are modeled from specified covariates, but can be adapted to work with real-world data.
+The repository contains a prototype of a fully automated framework designed to select the best method for estimating propensity scores. It provides a simplified implementation of the methodology for estimating PS using different models (logistic regression and several machine learning algorithms), and for evaluating covariate balance based on the estimated scores. The implementation is tailored to simulated datasets, where treatment assignment and outcome are modeled from specified covariates, but can be adapted to work with real-world data.
 
 # Introduction
 
